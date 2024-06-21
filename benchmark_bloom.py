@@ -119,3 +119,16 @@ expected_n = 1000
 max_n = 3000
 step = 100
 results = benchmark_false_positive_rate(expected_n, max_n, step)
+
+def plot_results(results):
+    plt.figure(figsize=(10, 5))
+
+    plt.plot(results['num_inserted'], results['false_positive_rate'], marker='o')
+    plt.xlabel('Number of Elements Inserted')
+    plt.ylabel('False Positive Rate')
+    plt.title('False Positive Rate vs Number of Elements Inserted')
+
+    plt.grid(True)
+    plt.show()
+
+plot_results(results)
