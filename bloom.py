@@ -95,4 +95,9 @@ class BloomFilter:
         self.hash_functions = CustomBloomFilterHashFunctions(size)
         self.n = 0
 
-    
+    def add(self, item) -> None:
+        # Get the hash positions and set them to 1 in the bit array
+        positions = self.hash_functions.get_hashes(item)
+        for pos in positions:
+            self.bit_array[pos] = 1
+        self.n += 1
