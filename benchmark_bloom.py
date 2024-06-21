@@ -115,3 +115,7 @@ def benchmark_false_positive_rate(expected_n, max_n, step):
         results['false_positive_rate'].append(false_positive_rate)
 
     return results
+expected_n = 1000
+max_n = 3000
+step = 100
+results = benchmark_false_positive_rate(expected_n, max_n, step)
