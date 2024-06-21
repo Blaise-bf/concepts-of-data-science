@@ -23,5 +23,10 @@ def benchmark_custom_bloom_filter() -> dict:
     size = 10000000  # Size of the Bloom filter
     results = {'size': [], 'insertion_time': [], 'lookup_time': []}
 
+    for n in sizes:
+        bloom_filter = BloomFilter(size)
+        insert_data = [random_string() for _ in range(n)]
+        lookup_data = [random_string() for _ in range(n)]
+
     
     return results
