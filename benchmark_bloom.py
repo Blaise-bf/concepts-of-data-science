@@ -28,5 +28,13 @@ def benchmark_custom_bloom_filter() -> dict:
         insert_data = [random_string() for _ in range(n)]
         lookup_data = [random_string() for _ in range(n)]
 
+        print(f'inserting {n} elements in bloom filter')
+        start_time = time.time()
+        for item in insert_data:
+            bloom_filter.add(item)
+        insertion_time = time.time() - start_time
+
+       
+
     
     return results
