@@ -40,6 +40,10 @@ def benchmark_custom_bloom_filter() -> dict:
             bloom_filter.check(item)
         lookup_time = time.time() - start_time
 
+        results['size'].append(n)
+        results['insertion_time'].append(insertion_time)
+        results['lookup_time'].append(lookup_time)
+
        
 
     
