@@ -101,3 +101,12 @@ class BloomFilter:
         for pos in positions:
             self.bit_array[pos] = 1
         self.n += 1
+    
+    def check(self, item) -> bool:
+        # Check if all positions calculated by hash functions are set to 1
+        positions = self.hash_functions.get_hashes(item)
+      
+        if all(self.bit_array[pos] for pos in positions):
+            return True
+        else:
+            return False
