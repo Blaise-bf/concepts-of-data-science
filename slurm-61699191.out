@@ -1,0 +1,57 @@
+SLURM_JOB_ID: 61699191
+SLURM_JOB_USER: vsc36297
+SLURM_JOB_ACCOUNT: lp_h_ds_2023_2024
+SLURM_JOB_NAME: jobscript.slurm
+SLURM_CLUSTER_NAME: wice
+SLURM_JOB_PARTITION: batch
+SLURM_NNODES: 1
+SLURM_NODELIST: s28c11n2
+SLURM_JOB_CPUS_PER_NODE: 1
+Date: Fri Jun 21 13:20:12 CEST 2024
+Walltime: 00-10:00:00
+========================================================================
+Collecting pip
+  Downloading https://files.pythonhosted.org/packages/a4/6d/6463d49a933f547439d6b5b98b46af8742cc03ae83543e4d7688c2420f8b/pip-21.3.1-py3-none-any.whl (1.7MB)
+Installing collected packages: pip
+  Found existing installation: pip 9.0.3
+    Uninstalling pip-9.0.3:
+      Successfully uninstalled pip-9.0.3
+Successfully installed pip-21.3.1
+You are using pip version 21.3.1, however version 24.1 is available.
+You should consider upgrading via the 'pip install --upgrade pip' command.
+Collecting matplotlib
+  Downloading matplotlib-3.3.4-cp36-cp36m-manylinux1_x86_64.whl (11.5 MB)
+Collecting numpy>=1.15
+  Downloading numpy-1.19.5-cp36-cp36m-manylinux2010_x86_64.whl (14.8 MB)
+Collecting pyparsing!=2.0.4,!=2.1.2,!=2.1.6,>=2.0.3
+  Downloading pyparsing-3.1.2-py3-none-any.whl (103 kB)
+Collecting python-dateutil>=2.1
+  Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
+Collecting cycler>=0.10
+  Downloading cycler-0.11.0-py3-none-any.whl (6.4 kB)
+Collecting pillow>=6.2.0
+  Downloading Pillow-8.4.0-cp36-cp36m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.1 MB)
+Collecting kiwisolver>=1.0.1
+  Downloading kiwisolver-1.3.1-cp36-cp36m-manylinux1_x86_64.whl (1.1 MB)
+Collecting six>=1.5
+  Downloading six-1.16.0-py2.py3-none-any.whl (11 kB)
+Installing collected packages: six, python-dateutil, pyparsing, pillow, numpy, kiwisolver, cycler, matplotlib
+Successfully installed cycler-0.11.0 kiwisolver-1.3.1 matplotlib-3.3.4 numpy-1.19.5 pillow-8.4.0 pyparsing-3.1.2 python-dateutil-2.9.0.post0 six-1.16.0
+inserting 1000 elements in bloom filter
+looking up 1000 elements in bloom filter
+inserting 5000 elements in bloom filter
+looking up 5000 elements in bloom filter
+inserting 10000 elements in bloom filter
+looking up 10000 elements in bloom filter
+inserting 20000 elements in bloom filter
+looking up 20000 elements in bloom filter
+inserting 50000 elements in bloom filter
+looking up 50000 elements in bloom filter
+inserting 100000 elements in bloom filter
+looking up 100000 elements in bloom filter
+inserting 500000 elements in bloom filter
+looking up 500000 elements in bloom filter
+inserting 1000000 elements in bloom filter
+looking up 1000000 elements in bloom filter
+inserting 5000000 elements in bloom filter
+looking up 5000000 elements in bloom filter
