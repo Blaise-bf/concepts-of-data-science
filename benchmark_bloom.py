@@ -51,3 +51,34 @@ def benchmark_custom_bloom_filter() -> dict:
 
 # get benchmark results
 results = benchmark_custom_bloom_filter()
+
+
+def plot_results(results) -> None:
+    """plots benchmarking results
+
+    Args:
+        results (dict): a dictionary of different sizes,
+          and their respective insertion and lookup times
+        
+    """
+    plt.figure(figsize=(18, 6))
+
+    plt.subplot(1, 2, 1)
+    plt.plot(results['size'], results['insertion_time'], marker='o')
+    plt.xlabel('Number of Elements')
+    plt.ylabel('Insertion Time (s)')
+    plt.title('Insertion Time vs Number of Elements')
+
+    plt.subplot(1, 2, 2)
+    plt.plot(results['size'], results['lookup_time'], marker='o')
+    plt.xlabel('Number of Elements')
+    plt.ylabel('Lookup Time (s)')
+    plt.title('Lookup Time vs Number of Elements')
+
+
+    plt.tight_layout()
+    plt.savefig('bloom_benchmark.png')
+    plt.close()
+
+# Plot bench mark results
+plot_results(results)
