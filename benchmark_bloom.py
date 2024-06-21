@@ -44,7 +44,10 @@ def benchmark_custom_bloom_filter() -> dict:
         results['insertion_time'].append(insertion_time)
         results['lookup_time'].append(lookup_time)
 
-       
 
-    
+
+       
     return results
+
+# get benchmark results
+results = benchmark_custom_bloom_filter()
