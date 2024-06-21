@@ -118,7 +118,7 @@ class BloomFilter:
         size of the of the bloom filter data structure
         returns float:
         """
-        num_hash_functions = len(self.hash_functions)  # number of hash functions
+        num_hash_functions = 9  # number of hash functions
         size = self.size
         number_of_elements = self.n
         return (1.0 - ((1.0 - 1.0 / size) ** (num_hash_functions * number_of_elements))) ** num_hash_functions
