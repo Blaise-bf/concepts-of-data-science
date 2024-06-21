@@ -82,3 +82,36 @@ def plot_results(results) -> None:
 
 # Plot bench mark results
 plot_results(results)
+
+def benchmark_false_positive_rate(expected_n, max_n, step):
+    """This function performs evaluation of the false positive rate
+    as a function of the number of elements being added to the bloom filter
+
+    Args:
+        expected_n (int): expected number of elements
+        max_n (int): maximum number of elements
+        step (int): step size for number of elements
+
+    Returns:
+        dict: dicionary of number of elements inserted and the false positive rate
+    """
+    size = expected_n * 10  # Size of the Bloom filter
+    bloom_filter = BloomFilter(size)
+    results = {'num_inserted': [], 'false_positive_rate': []}
+    
+    word_list_extended = word_list * (max_n // len(word_list) + 1)
+
+    for n in range(0, max_n + 1, step):
+        insert_data = word_list_extended[:n]
+
+        # Insert elements
+        for item in insert_data:
+            bloom_filter.add(item)
+
+        # Calculate false positive rate
+        false_positive_rate = bloom_filter.calculate_false_positive_rate()
+
+        results['num_inserted'].append(n)
+        results['false_positive_rate'].append(false_positive_rate)
+
+    return results
