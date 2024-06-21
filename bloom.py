@@ -66,3 +66,17 @@ class CustomBloomFilterHashFunctions:
         for char in item:
             hash_val = (hash_val ^ ord(char) * 41) % self.size
         return hash_val
+    
+    def get_hashes(self, item: str) -> list:
+        """Generate multiple custom hash values for the given item."""
+        return [
+            self._hash1(item),
+            self._hash2(item),
+            self._hash3(item),
+            self._hash4(item),
+            self._hash5(item),
+            self._hash6(item),
+            self._hash7(item),
+            self._hash8(item),
+            self._hash9(item)
+        ]
