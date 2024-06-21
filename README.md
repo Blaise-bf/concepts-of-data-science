@@ -13,3 +13,6 @@ Benchamarking was done in two steps:
 
 # Time complexity
 The time complexity of a Bloom filter algorithm is very efficient for both insertion and lookup operations. Specifically, both operations are 𝑂(𝑘), where k is the number of hash functions used. During insertion, each of the k hash functions is applied to the input element to determine the k positions in the bit array that need to be set to 1. Similarly, during a lookup, the same k hash functions are applied to check the corresponding positions in the bit array. Since k is typically a small constant, the time complexity for these operations is essentially O(1) in practice. However, the exact time depends on the efficiency of the hash functions and the speed of accessing the bit array.
+
+# Space complexity
+The space complexity of a Bloom filter is determined by the size of the bit array used to store the filter. Additionally, the space complexity includes the storage required for the k hash functions, but this is usually negligible compared to the size of the bit array.
