@@ -29,3 +29,40 @@ class CustomBloomFilterHashFunctions:
         for char in item:
             hash_val = (hash_val << 5) - hash_val + ord(char)
         return hash_val % self.size
+    def _hash5(self, item: str) -> int:
+         # A hash function that uses a different prime multiplier and bitwise operations
+        hash_val = 0
+        for char in item:
+            hash_val = (hash_val * 101 + ord(char)) % self.size
+        return hash_val
+
+    def _hash6(self, item: str) -> int:
+        # A hash function that combines polynomial hashing with a different base
+        hash_val = 0
+        for char in item:
+            hash_val = (hash_val * 67 + ord(char)) % self.size
+        return hash_val
+
+    def _hash7(self, item: str) -> int:
+        # A hash function that uses alternating additions and subtractions
+        hash_val = 0
+        for i, char in enumerate(item):
+            if i % 2 == 0:
+                hash_val = (hash_val + ord(char)) % self.size
+            else:
+                hash_val = (hash_val - ord(char)) % self.size
+        return hash_val
+
+    def _hash8(self, item: str) -> int:
+        # A hash function that uses multiplication and addition
+        hash_val = 0
+        for char in item:
+            hash_val = (hash_val * 37 + ord(char)) % self.size
+        return hash_val
+
+    def _hash9(self, item: str) -> int:
+        # A hash function that uses bitwise XOR operations
+        hash_val = 0
+        for char in item:
+            hash_val = (hash_val ^ ord(char) * 41) % self.size
+        return hash_val
