@@ -1,3 +1,4 @@
+
 class CustomBloomFilterHashFunctions:
     """
     A class to implement custom hash functions for Bloom Filters.
@@ -80,3 +81,18 @@ class CustomBloomFilterHashFunctions:
             self._hash8(item),
             self._hash9(item)
         ]
+    
+
+## add custom bloom filter class
+class BloomFilter:
+    """
+    This creates a custom bbool filter class with functionality to 
+    add and check elements elements inserted.
+    """
+    def __init__(self, size):
+        self.size = size
+        self.bit_array = [0] * size
+        self.hash_functions = CustomBloomFilterHashFunctions(size)
+        self.n = 0
+
+    
