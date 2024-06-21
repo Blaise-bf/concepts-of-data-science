@@ -16,3 +16,6 @@ The time complexity of a Bloom filter algorithm is very efficient for both inser
 
 # Space complexity
 The space complexity of a Bloom filter is determined by the size of the bit array used to store the filter. Additionally, the space complexity includes the storage required for the k hash functions, but this is usually negligible compared to the size of the bit array.
+
+# False Positive rate
+As elements are inserted into the Bloom filter, the false positive rate remains relatively low. This phase corresponds to the number of elements being well within the expected capacity of the Bloom filter. As the number of inserted elements approaches the expected capacity , the false positive rate begins to increase. This is because the likelihood of hash collisions increases, leading to more false positives. When the number of inserted elements exceeds the expected capacity, the false positive rate rises significantly. This rapid increase highlights the limitation of the Bloom filter, as it becomes saturated and hash collisions become very common.
