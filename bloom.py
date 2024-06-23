@@ -57,16 +57,20 @@ class CustomBloomFilterHashFunctions:
 
         # Perform Chi-Squared test for each hash function
         for i in range(hash_values.shape[1]):
-            observed_freq, _ = np.histogram(hash_values[:, i], bins=self.size)
-            expected_freq = np.ones(self.size) * len(items) / self.size
+            observed_freq, _ = np.histogram(hash_values[:, i], bins=min(self.size, 10))
+            expected_freq = np.ones(len(observed_freq)) * len(items) / len(observed_freq)
             chi2, p_value = chi2_contingency([observed_freq, expected_freq])[:2]
             print(f'Hash Function {i + 1}: Chi2 = {chi2:.2f}, p-value = {p_value:.2f}')
 
         # Plot histogram for visualization
+        n_hashes = hash_values.shape[1]
+        ncols = 3
+        nrows = (n_hashes + ncols - 1) // ncols
+
         plt.figure(figsize=(15, 7))
-        for i in range(hash_values.shape[1]):
-            plt.subplot(3, 3, i + 1)
-            plt.hist(hash_values[:, i], bins=self.size // 10, edgecolor='black')
+        for i in range(n_hashes):
+            plt.subplot(nrows, ncols, i + 1)
+            plt.hist(hash_values[:, i], bins=min(self.size // 10, 10), edgecolor='black')
             plt.title(f'Hash Function {i + 1}')
         plt.tight_layout()
         plt.show()
