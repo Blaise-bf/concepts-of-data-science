@@ -11,8 +11,15 @@ class CustomBloomFilterHashFunctions:
     """
 
     def __init__(self, size: int, num_hashes: int):
+        """initialize custom bloom filter class
+
+        Args:
+            size (int): capacityof bloom filter
+            num_hashes (int): number of hash functions
+        """
         self.size = size
         self.num_hashes = num_hashes
+        # Algorithms to use for 
         self.hash_algorithms = ['md5', 'sha1', 'sha256', 'sha512', 'blake2b']
 
     def _hashlib_hash(self, item: str, algorithm: str) -> int:
@@ -86,21 +93,40 @@ class BloomFilter:
     add and check elements inserted.
     """
 
-    def __init__(self, size, num_hashes):
+    def __init__(self, size: int, num_hashes: int) -> None:
+        """initialize bloom filter class
+
+        Args:
+            size (int): size of bloom fiter
+            num_hashes (int): number of hash functions
+        """
         self.size = size
         self.bit_array = [0] * size
         self.hash_functions = CustomBloomFilterHashFunctions(size, num_hashes)
         self.num_hashes = num_hashes
         self.n = 0
 
-    def add(self, item) -> None:
+    def add(self, item: str) -> None:
+        """checks 
+
+        Args:
+            item (str): item to add in bloom filter
+        """
         # Get the hash positions and set them to 1 in the bit array
         positions = self.hash_functions.get_hashes(item)
         for pos in positions:
             self.bit_array[pos] = 1
         self.n += 1
 
-    def check(self, item) -> bool:
+    def check(self, item: str) -> bool:
+        """this method checks if given string is in a bloom filter
+
+        Args:
+            item (str): abritray string
+
+        Returns:
+            bool: returns true if item in filter and false otherwise
+        """
         # Check if all positions calculated by hash functions are set to 1
         positions = self.hash_functions.get_hashes(item)
 
