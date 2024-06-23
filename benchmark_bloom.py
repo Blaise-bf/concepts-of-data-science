@@ -1,5 +1,5 @@
 from bloom import CustomBloomFilterHashFunctions, BloomFilter
-import nltk
+import faker as Faker
 import time
 import random
 import string
@@ -9,6 +9,21 @@ import matplotlib.pyplot as plt
 def random_string(length=10):
     """Function for generating random strings"""
     return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
+
+def generate_random_words(num_words: int, locale: str = 'en_US') -> list:
+    faker = Faker(locale)
+    return [faker.word() for _ in range(num_words)]
+
+
+def generate_random_dna_sequence(length: int) -> str:
+    return ''.join(random.choices('ACGT', k=length))
+
+def generate_random_dna_sequences(num_sequences: int, sequence_length: int) -> list:
+    return [generate_random_dna_sequence(sequence_length) for _ in range(num_sequences)]
+
+
+
+
 def benchmark_custom_bloom_filter() -> dict:
     """This function evaluates the insertion and lookup time for 
     variable amount of data for a custom bloom filter
