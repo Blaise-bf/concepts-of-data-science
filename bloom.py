@@ -1,4 +1,9 @@
 
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+from scipy.stats import chi2_contingency
+
 class CustomBloomFilterHashFunctions:
     """
     A class to implement custom hash functions for Bloom Filters.
@@ -81,6 +86,40 @@ class CustomBloomFilterHashFunctions:
             self._hash8(item),
             self._hash9(item)
         ]
+    def check_uniformity_with_chisquare(self, items: list) -> None:
+        """
+        Check for uniformity of hash functions using Chi-Squared test.
+        """
+        # Collect all hash values
+        hash_values = []
+        for item in items:
+            hash_values.append(self.get_hashes(item))
+        
+        # Convert to numpy array for easier manipulation
+        hash_values = np.array(hash_values)
+
+        # Perform Chi-Squared test for each hash function
+        for i in range(hash_values.shape[1]):
+            observed_freq, _ = np.histogram(hash_values[:, i], bins=self.size)
+            expected_freq = np.ones(self.size) * len(items) / self.size
+            chi2, p_value = chi2_contingency([observed_freq, expected_freq])[:2]
+            print(f'Hash Function {i + 1}: Chi2 = {chi2:.2f}, p-value = {p_value:.2f}')
+
+        # Plot histogram for visualization
+        plt.figure(figsize=(15, 7))
+        for i in range(hash_values.shape[1]):
+            plt.subplot(3, 3, i + 1)
+            plt.hist(hash_values[:, i], bins=self.size//10, edgecolor='black')
+            plt.title(f'Hash Function {i + 1}')
+        plt.tight_layout()
+        plt.show()
+        
+        # Check for independence using correlation matrix
+        corr_matrix = np.corrcoef(hash_values.T)
+        plt.figure(figsize=(10, 8))
+        sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', vmin=-1, vmax=1)
+        plt.title('Correlation Matrix of Hash Functions')
+        plt.show()
     
 
 ## add custom bloom filter class
