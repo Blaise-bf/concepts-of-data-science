@@ -161,3 +161,13 @@ class BloomFilter:
         size = self.size
         number_of_elements = self.n
         return (1.0 - ((1.0 - 1.0 / size) ** (num_hash_functions * number_of_elements))) ** num_hash_functions
+    
+    def calculate_compression_rate(self) -> float:
+        """This function checks the compression rate of the bloom filter as 
+        a function of the number of elements added to the data structure
+
+        Returns:
+            float: compression rate
+        """
+        theoretical_min_size = self.n * np.log2(np.e)
+        return self.size / theoretical_min_size
