@@ -1,9 +1,9 @@
 from bloom import CustomBloomFilterHashFunctions, BloomFilter
-import faker as Faker
 import time
 import random
 import string
 import matplotlib.pyplot as plt
+from faker import Faker
 
 
 def random_string(length=10):
@@ -11,6 +11,15 @@ def random_string(length=10):
     return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
 
 def generate_random_words(num_words: int, locale: str = 'en_US') -> list:
+    """Generates random words using the faker packge
+
+    Args:
+        num_words (int): number of words to be generated
+        locale (str, optional): language specification. Defaults to 'en_US'.
+
+    Returns:
+        list: a list of random words
+    """
     faker = Faker(locale)
     return [faker.word() for _ in range(num_words)]
 
@@ -19,86 +28,124 @@ def generate_random_dna_sequence(length: int) -> str:
     return ''.join(random.choices('ACGT', k=length))
 
 def generate_random_dna_sequences(num_sequences: int, sequence_length: int) -> list:
+    """generate random string of DNA sequences
+
+    Args:
+        num_sequences (int): number of sequences to be generated
+        sequence_length (int): length of dna sequence
+
+    Returns:
+        list: a list of DNA sequences generated
+    """
     return [generate_random_dna_sequence(sequence_length) for _ in range(num_sequences)]
 
 
 
+def random_string(length=10):
+    """Function for generating random strings"""
+    return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
 
-def benchmark_custom_bloom_filter() -> dict:
-    """This function evaluates the insertion and lookup time for 
-    variable amount of data for a custom bloom filter
-
-    Returns:
-        dict: a dictionary with the diffrent number of items added to 
-        the bloom filter and their respective lookup times
-    """
-    # define an array of number of elements to add to the bloom filter
-    sizes = [1000, 5000, 10000, 20000, 50000, 100000, 500000, 1000000, 5000000]
- 
-    size = 10000000  # Size of the Bloom filter
-    results = {'size': [], 'insertion_time': [], 'lookup_time': []}
-
-    for n in sizes:
-        bloom_filter = BloomFilter(size)
-        insert_data = [random_string() for _ in range(n)]
-        lookup_data = [random_string() for _ in range(n)]
-
-        print(f'inserting {n} elements in bloom filter')
-        start_time = time.time()
-        for item in insert_data:
-            bloom_filter.add(item)
-        insertion_time = time.time() - start_time
-
-        print(f'looking up {n} elements in bloom filter')
-        start_time = time.time()
-        for item in lookup_data:
-            bloom_filter.check(item)
-        lookup_time = time.time() - start_time
-
-        results['size'].append(n)
-        results['insertion_time'].append(insertion_time)
-        results['lookup_time'].append(lookup_time)
+def generate_random_words(num_words: int, locale: str = 'en_US') -> list:
+    """Generates random words using the faker package"""
+    fake = Faker(locale)
+    return [fake.word() for _ in range(num_words)]
 
 
+def benchmark_custom_bloom_filter(data_type: str, num_hashes_list: list) -> dict:
+    """Benchmark for custom bloom filter with different data types and number of hash functions"""
+    sizes = [i for i in range(20000, 1000001, 20000)]
+    size = 5000000 # Size of the Bloom filter
+    results = {num_hashes: {'size': [], 'insertion_time': [], 'lookup_time': [], 'compression_rate': [], 'false_positive_rate': []} for num_hashes in num_hashes_list}
 
-       
+    for num_hashes in num_hashes_list:
+        for n in sizes:
+            bloom_filter = BloomFilter(size, num_hashes)
+
+            if data_type == 'random_string':
+                insert_data = [random_string() for _ in range(n)]
+                lookup_data = [random_string() for _ in range(n)]
+            elif data_type == 'random_words':
+                insert_data = generate_random_words(n)
+                lookup_data = generate_random_words(n)
+            elif data_type == 'dna':
+                insert_data = generate_random_dna_sequences(n, 50)
+                lookup_data = generate_random_dna_sequences(n, 50)
+            else:
+                raise ValueError(f"Unknown data type: {data_type}")
+
+            print(f'Inserting {n} {data_type} elements with {num_hashes} hash functions')
+            start_time = time.time()
+            for item in insert_data:
+                bloom_filter.add(item)
+            insertion_time = time.time() - start_time
+
+            print(f'Looking up {n} {data_type} elements with {num_hashes} hash functions')
+            start_time = time.time()
+            for item in lookup_data:
+                bloom_filter.check(item)
+            lookup_time = time.time() - start_time
+
+            theoretical_false_positive_rate = bloom_filter.calculate_false_positive_rate()
+            compression_rate = bloom_filter.calculate_compression_rate()
+
+            results[num_hashes]['size'].append(n)
+            results[num_hashes]['insertion_time'].append(insertion_time)
+            results[num_hashes]['lookup_time'].append(lookup_time)
+            results[num_hashes]['compression_rate'].append(compression_rate)
+            results[num_hashes]['false_positive_rate'].append(theoretical_false_positive_rate)
+
     return results
 
-# get benchmark results
-results = benchmark_custom_bloom_filter()
+def plot_results(results, data_type) -> None:
+    """Plots benchmarking results with different line colors for number of hash functions"""
+    plt.figure(figsize=(18, 24))
 
-
-def plot_results(results) -> None:
-    """plots benchmarking results
-
-    Args:
-        results (dict): a dictionary of different sizes,
-          and their respective insertion and lookup times
-        
-    """
-    plt.figure(figsize=(18, 6))
-
-    plt.subplot(1, 2, 1)
-    plt.plot(results['size'], results['insertion_time'], marker='o')
+    plt.subplot(2, 2, 1)
+    for num_hashes, data in results.items():
+        plt.plot(data['size'], data['insertion_time'], marker='o', label=f'{num_hashes} hash functions')
     plt.xlabel('Number of Elements')
     plt.ylabel('Insertion Time (s)')
-    plt.title('Insertion Time vs Number of Elements')
+    plt.title(f'Insertion Time vs Number of Elements\n(Data Type: {data_type})')
+    plt.legend()
 
-    plt.subplot(1, 2, 2)
-    plt.plot(results['size'], results['lookup_time'], marker='o')
+    plt.subplot(2, 2, 2)
+    for num_hashes, data in results.items():
+        plt.plot(data['size'], data['lookup_time'], marker='o', label=f'{num_hashes} hash functions')
     plt.xlabel('Number of Elements')
     plt.ylabel('Lookup Time (s)')
-    plt.title('Lookup Time vs Number of Elements')
+    plt.title(f'Lookup Time vs Number of Elements\n(Data Type: {data_type})')
+    plt.legend()
 
+    plt.subplot(2, 2, 3)
+    for num_hashes, data in results.items():
+        plt.plot(data['size'], data['compression_rate'], marker='o', label=f'{num_hashes} hash functions')
+    plt.xlabel('Number of Elements')
+    plt.ylabel('Compression Rate')
+    plt.title(f'Compression Rate vs Number of Elements\n(Data Type: {data_type})')
+    plt.legend()
+
+    plt.subplot(2, 2, 4)
+    for num_hashes, data in results.items():
+        plt.plot(data['size'], data['false_positive_rate'], marker='o', label=f'{num_hashes} hash functions')
+    plt.xlabel('Number of Elements')
+    plt.ylabel('False Positive Rate')
+    plt.title(f'False Positive Rate vs Number of Elements\n(Data Type: {data_type})')
+    plt.legend()
 
     plt.tight_layout()
-    plt.savefig('bloom_benchmark.png')
+    plt.savefig(f'bloom_benchmark_{data_type}.png')
     plt.close()
 
-# Plot bench mark results
-plot_results(results)
 
-def benchmark_false_positive_rate(expected_n, max_n, step):
+# Benchmark and plot for different data types and number of hash functions
+# data_types = ['random_string', 'random_words', 'dna']
+# num_hashes_list = list(range(5, 26, 5))
+
+# for data_type in data_types:
+#     results = benchmark_custom_bloom_filter(data_type, num_hashes_list)
+#     plot_results(results, data_type)
+
+def benchmark_false_positive_rate(expected_n, max_n, step, num_hashes):
     """This function performs evaluation of the false positive rate
     as a function of the number of elements being added to the bloom filter
 
@@ -111,7 +158,8 @@ def benchmark_false_positive_rate(expected_n, max_n, step):
         dict: dicionary of number of elements inserted and the false positive rate
     """
     size = expected_n * 10  # Size of the Bloom filter
-    bloom_filter = BloomFilter(size)
+    bloom_filter = BloomFilter(size, num_hashes)
+
     results = {'num_inserted': [], 'false_positive_rate': []}
     
     word_list_extended = word_list * (max_n // len(word_list) + 1)
@@ -130,10 +178,6 @@ def benchmark_false_positive_rate(expected_n, max_n, step):
         results['false_positive_rate'].append(false_positive_rate)
 
     return results
-expected_n = 1000
-max_n = 3000
-step = 100
-results = benchmark_false_positive_rate(expected_n, max_n, step)
 
 def plot_results(results):
     plt.figure(figsize=(10, 5))
@@ -146,4 +190,4 @@ def plot_results(results):
     plt.grid(True)
     plt.show()
 
-plot_results(results)
+# plot_results(results)
