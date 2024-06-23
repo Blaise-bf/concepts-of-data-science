@@ -1,10 +1,9 @@
-import numpy as np
-import mmh3
 import hashlib
-import seaborn as sns
+import mmh3
+import numpy as np
 import matplotlib.pyplot as plt
+import seaborn as sns
 from scipy.stats import chi2_contingency
-
 
 class CustomBloomFilterHashFunctions:
     """
@@ -41,7 +40,6 @@ class CustomBloomFilterHashFunctions:
             else:
                 hashes.append(self._mmh3_hash(item, seeds[i]))
         return hashes
-
 
     def check_uniformity_with_chisquare(self, items: list) -> None:
         """
@@ -82,15 +80,13 @@ class CustomBloomFilterHashFunctions:
         plt.title('Correlation Matrix of Hash Functions')
         plt.show()
 
-
-## add custom bloom filter class
 class BloomFilter:
     """
-    This creates a custom bloom filter class with functionality to
-    add and check  elements inserted.
+    This creates a custom bloom filter class with functionality to 
+    add and check elements inserted.
     """
 
-    def __init__(self, size: int, num_hashes: int) -> None:
+    def __init__(self, size, num_hashes):
         self.size = size
         self.bit_array = [0] * size
         self.hash_functions = CustomBloomFilterHashFunctions(size, num_hashes)
@@ -115,19 +111,17 @@ class BloomFilter:
 
     def calculate_false_positive_rate(self) -> float:
         """
-        This method calculates false positive rate base on the number 
+        This method calculates false positive rate based on the number 
         of items added to the bloom filter as well as the number of hash functions and the
-        size of the bloom filter data structure
-        returns float:
+        size of the bloom filter data structure.
         """
-        num_hash_functions = self.num_hashes  # number of hash functions
         size = self.size
         number_of_elements = self.n
-        return (1.0 - ((1.0 - 1.0 / size) ** (num_hash_functions * number_of_elements))) ** num_hash_functions
+        return (1.0 - ((1.0 - 1.0 / size) ** (self.num_hashes * number_of_elements))) ** self.num_hashes
 
     def calculate_compression_rate(self) -> float:
         """This function checks the compression rate of the bloom filter as 
-        a function of the number of elements added to the data structure
+        a function of the number of elements added to the data structure.
 
         Returns:
             float: compression rate
