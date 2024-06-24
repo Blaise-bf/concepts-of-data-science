@@ -138,55 +138,62 @@ def plot_results(results, data_type) -> None:
 
 
 # Benchmark and plot for different data types and number of hash functions
-# data_types = ['random_string', 'random_words', 'dna']
-# num_hashes_list = list(range(5, 26, 5))
+data_types = ['random_string', 'random_words', 'dna']
+num_hashes_list = list(range(5, 26, 5))
 
-# for data_type in data_types:
-#     results = benchmark_custom_bloom_filter(data_type, num_hashes_list)
-#     plot_results(results, data_type)
+for data_type in data_types:
+    results = benchmark_custom_bloom_filter(data_type, num_hashes_list)
+    plot_results(results, data_type)
 
-def benchmark_false_positive_rate(expected_n, max_n, step, num_hashes):
-    """This function performs evaluation of the false positive rate
-    as a function of the number of elements being added to the bloom filter
+def benchmark_false_positive_rate(expected_n: int, max_n: int, step: int, hash_funcs_list: list, word_list: list) -> None:
 
+    """this function evaluates the false positive rate of the as the number of inserted elements in 
+    the filter approaches the expected capacity of the bloom filter.
     Args:
-        expected_n (int): expected number of elements
-        max_n (int): maximum number of elements
-        step (int): step size for number of elements
+        expected_n(int): expected capacity of filter
+        max_n(int): maximum size of filter
+        hash_funcs_list: a list of the number of hash functions to use for the bloom filter
+        word_list(list): random natural items to be added to the filter
 
     Returns:
-        dict: dicionary of number of elements inserted and the false positive rate
+        None: 
     """
-    size = expected_n * 10  # Size of the Bloom filter
-    bloom_filter = BloomFilter(size, num_hashes)
 
-    results = {'num_inserted': [], 'false_positive_rate': []}
-    
+    results = []
+
     word_list_extended = word_list * (max_n // len(word_list) + 1)
 
-    for n in range(0, max_n + 1, step):
-        insert_data = word_list_extended[:n]
+    for num_hashes in hash_funcs_list:
+        bloom_filter = BloomFilter(expected_n * 10, num_hashes)
+        current_results = {'num_inserted': [], 'false_positive_rate': [], 'num_hashes': num_hashes}
 
-        # Insert elements
-        for item in insert_data:
-            bloom_filter.add(item)
+        for n in range(0, max_n + 1, step):
+            insert_data = word_list_extended[:n]
 
-        # Calculate false positive rate
-        false_positive_rate = bloom_filter.calculate_false_positive_rate()
+            # Insert elements
+            for item in insert_data:
+                bloom_filter.add(item)
 
-        results['num_inserted'].append(n)
-        results['false_positive_rate'].append(false_positive_rate)
+            # Calculate false positive rate
+            false_positive_rate = bloom_filter.calculate_false_positive_rate()
+
+            current_results['num_inserted'].append(n)
+            current_results['false_positive_rate'].append(false_positive_rate)
+
+        results.append(current_results)
 
     return results
 
 def plot_results(results):
-    plt.figure(figsize=(10, 5))
+    plt.figure(figsize=(12, 6))
 
-    plt.plot(results['num_inserted'], results['false_positive_rate'], marker='o')
+    for result in results:
+        plt.plot(result['num_inserted'], result['false_positive_rate'], marker='o', label=f"Hash functions: {result['num_hashes']}")
+
     plt.xlabel('Number of Elements Inserted')
     plt.ylabel('False Positive Rate')
     plt.title('False Positive Rate vs Number of Elements Inserted')
-
+    plt.legend()
     plt.grid(True)
     plt.show()
 
